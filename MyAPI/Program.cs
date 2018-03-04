@@ -22,6 +22,8 @@ namespace MyAPI
                 .UseStartup<Startup>()
                 .UseKestrel(options =>
                 {
+                    options.AddServerHeader = false;
+                    options.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(1);
                     options.Limits.MaxConcurrentConnections = 1000;
                     options.Limits.MaxConcurrentUpgradedConnections = 1000;
                     options.Limits.MaxRequestBodySize = 10 * 1024;
