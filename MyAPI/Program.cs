@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
+using System;
 
 namespace MyAPI
 {
@@ -18,6 +20,16 @@ namespace MyAPI
             WebHost.CreateDefaultBuilder(args)
                 .UseConfiguration(configuration)//override from hosting.json file
                 .UseStartup<Startup>()
+                .UseKestrel(options =>
+                {
+                    options.Limits.MaxConcurrentConnections = 1000;
+                    options.Limits.MaxConcurrentUpgradedConnections = 1000;
+                    options.Limits.MaxRequestBodySize = 10 * 1024;
+                    options.Limits.MinRequestBodyDataRate =
+                        new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
+                    options.Limits.MinResponseDataRate =
+                        new MinDataRate(bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
+                })
                 .Build();
     }
 }
