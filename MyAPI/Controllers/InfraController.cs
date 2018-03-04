@@ -20,7 +20,9 @@ namespace MyAPI.Controllers
             {
                 if (itemAttribute is AssemblyInformationalVersionAttribute)
                 {
-                    myProperty.InformationalVersion = (itemAttribute as AssemblyInformationalVersionAttribute).InformationalVersion;
+                    myProperty.InformationalVersion = (itemAttribute as AssemblyInformationalVersionAttribute)
+                        .InformationalVersion;
+                   
                 }
                 else if (itemAttribute is AssemblyCopyrightAttribute)
                 {
