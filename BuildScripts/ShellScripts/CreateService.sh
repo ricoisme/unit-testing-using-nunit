@@ -23,7 +23,7 @@ User=jenkins
 WantedBy=multi-user.target" > /usr/lib/systemd/system/$service
 
 fi
-systemctl daemon-reload
+
 
 
 
