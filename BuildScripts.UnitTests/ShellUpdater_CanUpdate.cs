@@ -18,7 +18,7 @@ namespace BuildScripts.UnitTests
             var shContent = shellUpdater.ServiceUpdate("IntegrationTest", "aspnetwebapicoredemo");
             var secondLine = shContent.Split(new string[] { Environment.NewLine },
                 StringSplitOptions.RemoveEmptyEntries)[1];
-            Assert.IsTrue(secondLine.Equals("cat /usr/lib/systemd/system/IntegrationTest-aspnetwebapicoredemo.service << EOF"));
+            Assert.IsTrue(secondLine.Equals("service=IntegrationTest-aspnetwebapicoredemo.service"));
         }
     }
 }

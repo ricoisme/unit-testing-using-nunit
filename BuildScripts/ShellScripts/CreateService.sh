@@ -1,5 +1,12 @@
 ﻿#!/bin/sh
-cat /usr/lib/systemd/system/${serviceName}$.service << EOF
+service=${serviceName}$.service
+if (( $(ps -ef | grep -v grep | grep $service | wc -l) > 0 ))
+then
+systemctl stop $service
+systemctl disable $service
+rm -rf  /usr/lib/systemd/system/$service
+else
+cat /usr/lib/systemd/system/$service << EOF
 
 [Unit]
 Description=${Description}$
@@ -18,3 +25,12 @@ User=jenkins
 WantedBy=multi-user.target
 
 EOF
+
+fi
+systemctl daemon-reload
+
+
+
+
+
+

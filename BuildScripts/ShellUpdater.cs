@@ -12,15 +12,15 @@ namespace BuildScripts
         public string ServiceUpdate(string environment, string serviceName)
         {
             var mainPath = Directory.GetCurrentDirectory();
-            var shellScriptsPath = $"{mainPath}/ShellScripts/CreateService.sh";
-            var scriptsContent = File.ReadAllText(shellScriptsPath);
-            scriptsContent = scriptsContent.Replace("${serviceName}$", $"{environment}-{serviceName}");
-            scriptsContent = scriptsContent.Replace("${Description}$", "Example ASP.NET Web API running on CentOS 7");
-            scriptsContent = scriptsContent.Replace("${WorkingDirectory}$", "/home/PrimeService/AssemblyOutput");
-            scriptsContent = scriptsContent.Replace("${assembly}$", "MyAPI.dll");
-            scriptsContent = scriptsContent.Replace("${Environment}$", $"{environment}");
-            File.WriteAllText(shellScriptsPath, scriptsContent);
-            return scriptsContent;
+            var createServiceShellPath = $"{mainPath}/ShellScripts/CreateService.sh";
+            var createServiceShellContent = File.ReadAllText(createServiceShellPath);
+            createServiceShellContent = createServiceShellContent.Replace("${serviceName}$", $"{environment}-{serviceName}");
+            createServiceShellContent = createServiceShellContent.Replace("${Description}$", "Example ASP.NET Web API running on CentOS 7");
+            createServiceShellContent = createServiceShellContent.Replace("${WorkingDirectory}$", "/home/PrimeService/AssemblyOutput");
+            createServiceShellContent = createServiceShellContent.Replace("${assembly}$", "MyAPI.dll");
+            createServiceShellContent = createServiceShellContent.Replace("${Environment}$", $"{environment}");
+            File.WriteAllText(createServiceShellPath, createServiceShellContent);
+            return createServiceShellContent;
         }
     }
 
