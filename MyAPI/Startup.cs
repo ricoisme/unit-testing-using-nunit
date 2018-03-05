@@ -27,13 +27,6 @@ namespace MyAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        name: "default",
-            //        template: "{controller=Infra}/{action=Index}/{id?}");
-            //});
             app.UseMvc();
         }
     }
