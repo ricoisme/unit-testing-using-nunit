@@ -16,7 +16,7 @@ namespace BuildScripts
             var createServiceShellContent = File.ReadAllText(createServiceShellPath);
             createServiceShellContent = createServiceShellContent.Replace("@{serviceName}@", $"{environment}-{serviceName}");
             createServiceShellContent = createServiceShellContent.Replace("@{Description}@", "Example ASP.NET Web API running on CentOS 7");
-            createServiceShellContent = createServiceShellContent.Replace("@{WorkingDirectory}@", "/home/PrimeService/AssemblyOutput");
+            createServiceShellContent = createServiceShellContent.Replace("@{WorkingDirectory}@", "/var/PrimeService/AssemblyOutput");
             createServiceShellContent = createServiceShellContent.Replace("@{assembly}@", "MyAPI.dll");
             createServiceShellContent = createServiceShellContent.Replace("@{Environment}@", $"{environment}");
             File.WriteAllText(createServiceShellPath, createServiceShellContent);
