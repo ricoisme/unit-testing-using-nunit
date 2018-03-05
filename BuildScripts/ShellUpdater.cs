@@ -6,10 +6,10 @@ namespace BuildScripts
     {
         public ShellUpdater()
         {
-            ProcessService("IntegrationTest", "aspnetwebapicoredemo");
+            ServiceUpdate("IntegrationTest", "aspnetwebapicoredemo");
         }
 
-        public string ProcessService(string environment, string serviceName)
+        public string ServiceUpdate(string environment, string serviceName)
         {
             var mainPath = Directory.GetCurrentDirectory();
             var shellScriptsPath = $"{mainPath}/ShellScripts/CreateService.sh";
