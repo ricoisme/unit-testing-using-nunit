@@ -19,6 +19,7 @@ namespace BuildScripts
             scriptsContent = scriptsContent.Replace("${WorkingDirectory}$", "/home/PrimeService/AssemblyOutput");
             scriptsContent = scriptsContent.Replace("${assembly}$", "MyAPI.dll");
             scriptsContent = scriptsContent.Replace("${Environment}$", $"{environment}");
+            File.WriteAllText(shellScriptsPath, scriptsContent);
             return scriptsContent;
         }
     }
