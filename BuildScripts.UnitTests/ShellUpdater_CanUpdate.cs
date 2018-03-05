@@ -1,9 +1,9 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 
 namespace BuildScripts.UnitTests
 {
-    [TestClass]
+    [TestFixture]
     public class ShellUpdater_CanUpdate
     {
         private readonly ShellUpdater shellUpdater;
@@ -12,7 +12,7 @@ namespace BuildScripts.UnitTests
             shellUpdater = new ShellUpdater();
         }
 
-        [TestMethod]
+        [Test]
         public void CanUpdate()
         {
             var shContent = shellUpdater.ServiceUpdate("IntegrationTest", "aspnetwebapicoredemo");
