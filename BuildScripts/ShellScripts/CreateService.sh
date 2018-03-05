@@ -1,30 +1,26 @@
 ﻿#!/bin/sh
-service=${serviceName}$.service
+service=@{serviceName}@.service
 if (( $(ps -ef | grep -v grep | grep $service | wc -l) > 0 ))
 then
 systemctl stop $service
 systemctl disable $service
-rm -rf  /usr/lib/systemd/system/$service
+rm -rf /usr/lib/systemd/system/$service
 else
-cat /usr/lib/systemd/system/$service << EOF
-
-[Unit]
-Description=${Description}$
+echo "[Unit]
+Description=@{Description}@
 
 [Service]
-WorkingDirectory=${WorkingDirectory}$
-ExecStart=/usr/bin/dotnet ${WorkingDirectory}$/${assembly}$
-ExecStop=/usr/bin/dotnet ${WorkingDirectory}$/${assembly}$
+WorkingDirectory=@{WorkingDirectory}@
+ExecStart=/usr/bin/dotnet @{WorkingDirectory}@/@{assembly}@
+ExecStop=/usr/bin/dotnet @{WorkingDirectory}@/@{assembly}@
 Restart=always
 RestartSec=10
 SyslogIdentifier=dotnetwebapi-demo
-Environment=ASPNETCORE_ENVIRONMENT=${Environment}$
+Environment=ASPNETCORE_ENVIRONMENT=@{Environment}@
 User=jenkins
 
 [Install]
-WantedBy=multi-user.target
-
-EOF
+WantedBy=multi-user.target" > /usr/lib/systemd/system/$service
 
 fi
 systemctl daemon-reload
