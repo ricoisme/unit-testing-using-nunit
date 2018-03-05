@@ -25,6 +25,7 @@ WantedBy=multi-user.target" > /usr/lib/systemd/system/$service
 fi
 
 sudo systemctl daemon-reload
+sudo systemctl start $service
 
 
 
