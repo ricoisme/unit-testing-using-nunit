@@ -12,7 +12,6 @@ Description=@{Description}@
 [Service]
 WorkingDirectory=@{WorkingDirectory}@
 ExecStart=/usr/bin/dotnet @{WorkingDirectory}@/@{assembly}@
-ExecStop=/usr/bin/dotnet @{WorkingDirectory}@/@{assembly}@
 Restart=always
 RestartSec=10
 SyslogIdentifier=dotnetwebapi-demo
