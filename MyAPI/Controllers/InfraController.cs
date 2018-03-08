@@ -45,18 +45,18 @@ namespace MyAPI.Controllers
                 .ToArray();
         }
 
-        [HttpGet("headerKey/{headerKey?}", Name = "GetIpInformation")]
-        public string[] GetIpInformation(string headerKey = "")
+        [HttpGet("headerKey/{headerKey?}", Name = "GetRequestInformation")]
+        public string[] GetRequestInformation(string headerKey = "")
         {
             var contextServerIp = this.Request.HttpContext.Connection.LocalIpAddress;
             var contextClientIp = this.Request.HttpContext.Connection.RemoteIpAddress;
             var headerClientIp = this.Request.Headers[string.IsNullOrEmpty(headerKey) ? "X-Forwarded-For" : headerKey];
             var otherHeaders = this.Request.Headers
-                .Select(kv => (kv.Key + kv.Value).ToString());
+                .Select(kv => $"key:{kv.Key},value:{kv.Value}");
             return otherHeaders
-                .Append(contextServerIp.ToString())
-                .Append(contextClientIp.ToString())
-                .Append(headerClientIp.ToString())
+                .Append($"ServerIpFromHttpcontext:{contextServerIp.ToString()}")
+                .Append($"ClientIpFromHttpcontext:{contextClientIp.ToString()}")
+                .Append($"ClientIpFromHeaders:{headerClientIp.ToString()}")
                 .ToArray();
         }
     }
