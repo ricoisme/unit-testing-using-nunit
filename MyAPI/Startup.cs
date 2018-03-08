@@ -32,7 +32,11 @@ namespace MyAPI
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             })
-            .UseMvc();
+                .UseMvcWithDefaultRoute(); //{controller=Infra}/{action=Index}/{id?}
+            //.UseMvc(routes =>
+            //    {
+            //        routes.MapRoute("default", "{controller=Infra}/{action=Index}/{id?}");
+            //    });
         }
     }
 }

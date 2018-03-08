@@ -12,7 +12,7 @@ namespace MyAPI.Controllers
         [HttpGet]
         public string Get() => System.Runtime.InteropServices.RuntimeInformation.OSDescription;
 
-        [HttpGet("{attributeName}")]
+        [HttpGet("attributeName/{attributeName?}", Name = "GetCustomAttribute")]
         public string[] GetCustomAttribute(string attributeName = "")
         {
             MyProperty myProperty = new MyProperty();
@@ -22,7 +22,6 @@ namespace MyAPI.Controllers
                 {
                     myProperty.InformationalVersion = (itemAttribute as AssemblyInformationalVersionAttribute)
                         .InformationalVersion;
-
                 }
                 else if (itemAttribute is AssemblyCopyrightAttribute)
                 {
@@ -46,12 +45,12 @@ namespace MyAPI.Controllers
                 .ToArray();
         }
 
-        [HttpGet("{type}")]
-        public string[] GetIPInformation(string type = "")
+        [HttpGet("headerKey/{headerKey?}", Name = "GetIpInformation")]
+        public string[] GetIpInformation(string headerKey = "")
         {
             var contextServerIp = this.Request.HttpContext.Connection.LocalIpAddress;
             var contextClientIp = this.Request.HttpContext.Connection.RemoteIpAddress;
-            var headerClientIp = this.Request.Headers["X-Forwarded-For"];
+            var headerClientIp = this.Request.Headers[string.IsNullOrEmpty(headerKey) ? "X-Forwarded-For" : headerKey];
             var otherHeaders = this.Request.Headers
                 .Select(kv => (kv.Key + kv.Value).ToString());
             return otherHeaders
