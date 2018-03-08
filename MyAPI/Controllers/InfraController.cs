@@ -13,7 +13,7 @@ namespace MyAPI.Controllers
         public string Get() => System.Runtime.InteropServices.RuntimeInformation.OSDescription;
 
         [HttpGet("attributeName/{attributeName?}", Name = "GetCustomAttribute")]
-        public string[] GetCustomAttribute(string attributeName = "")
+        public string[] GetCustomAttribute(string attributeName)
         {
             MyProperty myProperty = new MyProperty();
             foreach (var itemAttribute in typeof(Startup).GetTypeInfo().Assembly.GetCustomAttributes())
