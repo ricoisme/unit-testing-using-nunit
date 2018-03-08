@@ -1,18 +1,12 @@
-FROM microsoft/aspnetcore-build:2.0 AS build
+# docker build -f Dockerfile -t rico/myapi .
+# Build runtime image 
+FROM microsoft/aspnetcore
+MAINTAINER RiCo
 WORKDIR /app
- 
-COPY *.csproj ./
-RUN dotnet build --configuration Release
 
-COPY . ./
-RUN dotnet publish --configuration Release --output output
- 
-FROM microsoft/aspnetcore:2.0
-WORKDIR /app
-COPY --from=build /app/output .
- 
+COPY ./AssemblyOutput /app
 EXPOSE 5000
 ENV ASPNETCORE_URLS http://*:5000
 ENV ASPNETCORE_ENVIRONMENT docker
- 
-ENTRYPOINT ["dotnet", "MyAPI.dll"]
+ENTRYPOINT  ["dotnet", "MyAPI.dll"]
+

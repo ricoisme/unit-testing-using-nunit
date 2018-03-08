@@ -1,0 +1,44 @@
+version: '3'
+ 
+services:
+ 
+  app:
+    container_name: 'coreapp'
+    image: 'coreapp'
+    networks:
+           mynet:
+               ipv4_address: 172.28.1.2
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+     - ./log:/app/log 
+  app2:
+    container_name: 'coreapp2'
+    image: 'coreapp'
+    networks:
+           mynet:
+               ipv4_address: 172.28.1.3
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+     - ./log:/app/log
+  app3:
+    container_name: 'coreapp3'
+    image: 'coreapp'
+    networks:
+           mynet:
+               ipv4_address: 172.28.1.4
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+     - ./log:/app/log
+networks:
+    mynet:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.28.0.0/16
+
