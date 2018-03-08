@@ -22,7 +22,7 @@ namespace MyAPI.Controllers
                 {
                     myProperty.InformationalVersion = (itemAttribute as AssemblyInformationalVersionAttribute)
                         .InformationalVersion;
-                   
+
                 }
                 else if (itemAttribute is AssemblyCopyrightAttribute)
                 {
@@ -43,6 +43,21 @@ namespace MyAPI.Controllers
             }
             return typeof(MyProperty).GetProperties()
                 .Select(e => e.GetValue(myProperty)?.ToString())
+                .ToArray();
+        }
+
+        [HttpGet("{type}")]
+        public string[] GetIPInformation(string type = "")
+        {
+            var contextServerIp = this.Request.HttpContext.Connection.LocalIpAddress;
+            var contextClientIp = this.Request.HttpContext.Connection.RemoteIpAddress;
+            var headerClientIp = this.Request.Headers["X-Forwarded-For"];
+            var otherHeaders = this.Request.Headers
+                .Select(kv => (kv.Key + kv.Value).ToString());
+            return otherHeaders
+                .Append(contextServerIp.ToString())
+                .Append(contextClientIp.ToString())
+                .Append(headerClientIp.ToString())
                 .ToArray();
         }
     }

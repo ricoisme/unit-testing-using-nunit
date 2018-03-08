@@ -14,13 +14,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildScripts", "Builds\Buil
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildScripts.UnitTests", "Builds\BuildScripts.UnitTests\BuildScripts.UnitTests.csproj", "{CCD7B565-57C1-4CBF-9063-630E6F01236C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{3B613E81-1F38-43FA-845D-1F73CDA82C80}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nginx", "Nginx", "{E7F69744-0961-4385-9900-2BF39E061371}"
-	ProjectSection(SolutionItems) = preProject
-		Builds\Nginx\nginx.conf = Builds\Nginx\nginx.conf
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -98,8 +91,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{CCB1BB2E-5444-40BB-81A1-C51121FC2B41} = {48F33721-95AB-4DCE-A9B1-A1979C57A5B9}
 		{CCD7B565-57C1-4CBF-9063-630E6F01236C} = {48F33721-95AB-4DCE-A9B1-A1979C57A5B9}
-		{3B613E81-1F38-43FA-845D-1F73CDA82C80} = {48F33721-95AB-4DCE-A9B1-A1979C57A5B9}
-		{E7F69744-0961-4385-9900-2BF39E061371} = {48F33721-95AB-4DCE-A9B1-A1979C57A5B9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5E9E068D-AA46-4AC6-ADD1-0046FB77059C}
