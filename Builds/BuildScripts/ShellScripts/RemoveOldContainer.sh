@@ -2,6 +2,7 @@
 result=$(sudo docker ps -a -q --filter ancestor=coreapp)
 
 if [[ -n "$result" ]]; then
+  sudo docker stop $(sudo docker ps -a -q --filter ancestor=coreapp)
   sudo docker rm $(sudo docker ps -a -q --filter ancestor=coreapp)
   echo "removed old Containers of coreapp"
 else
