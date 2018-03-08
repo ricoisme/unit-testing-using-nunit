@@ -17,6 +17,9 @@
     <None Update="ShellScripts\CreateService.sh">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="ShellScripts\RemoveOldContainer.sh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
