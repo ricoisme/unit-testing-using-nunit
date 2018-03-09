@@ -7,7 +7,7 @@ using System.Runtime.Versioning;
 namespace MyAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class InfraController : Controller
     {
         private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
@@ -18,10 +18,11 @@ namespace MyAPI.Controllers
         }
 
         [HttpGet]
-        public string Get() => System.Runtime.InteropServices.RuntimeInformation.OSDescription;
+        [ActionName("GetOs")]
+        public string GetOs() => System.Runtime.InteropServices.RuntimeInformation.OSDescription;
 
         [HttpGet]
-        [Route("GetCustomAttribute")]
+        [ActionName("GetCustomAttribute")]
         public string[] GetCustomAttribute(string attributeName = "")
         {
             MyProperty myProperty = new MyProperty();
@@ -55,7 +56,7 @@ namespace MyAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetRequestInformation")]
+        [ActionName("GetRequestInformation")]
         public string[] GetRequestInformation(string headerKey)
         {
             var contextServerIp = this.Request.HttpContext.Connection.LocalIpAddress;
@@ -72,7 +73,7 @@ namespace MyAPI.Controllers
 
         [HttpGet]
         [HttpPost]
-        [Route("GetRoutes")]
+        [ActionName("GetRoutes")]
         public string GetRoutes()
         {
             var routes = _actionDescriptorCollectionProvider.ActionDescriptors.Items.Select(x => new
