@@ -36,7 +36,7 @@ namespace MyAPI
                 .UseMvc(routes =>
                 {
                     routes.MapRoute("api", "api/{controller=Infra}/{action=GetOs}/{id?}");
-                    routes.MapRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                    routes.MapRoute("default", "{controller=values}/{action=Index}/{id?}");
                 });
         }
     }
