@@ -33,11 +33,12 @@ namespace MyAPI
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             })
                 .UseStaticFiles()
-                .UseMvc(routes =>
-                {
-                    routes.MapRoute("api", "api/{controller=Infra}/{action=GetOs}/{id?}");
-                    routes.MapRoute("default", "{controller=values}/{action=Index}/{id?}");
-                });
+                .UseMvc();
+            //.UseMvc(routes =>
+            //{
+            //    routes.MapRoute("api", "api/{controller=Infra}/{action=GetOs}/{id?}");
+            //    routes.MapRoute("default", "{controller=values}/{action=Index}/{id?}");
+            //});
         }
     }
 }
