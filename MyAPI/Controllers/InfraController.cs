@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Versioning;
@@ -9,6 +10,13 @@ namespace MyAPI.Controllers
     [Route("api/[controller]")]
     public class InfraController : Controller
     {
+        private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
+
+        public InfraController(IActionDescriptorCollectionProvider actionDescriptorCollectionProvider)
+        {
+            this._actionDescriptorCollectionProvider = actionDescriptorCollectionProvider;
+        }
+
         [HttpGet]
         public string Get() => System.Runtime.InteropServices.RuntimeInformation.OSDescription;
 
@@ -60,6 +68,22 @@ namespace MyAPI.Controllers
                 .Append($"ClientIpFromHttpcontext:{contextClientIp.ToString()}")
                 .Append($"ClientIpFromHeaders:{headerClientIp.ToString()}")
                 .ToArray();
+        }
+
+        [HttpGet]
+        [HttpPost]
+        [Route("GetRoutes")]
+        public string GetRoutes()
+        {
+            var routes = _actionDescriptorCollectionProvider.ActionDescriptors.Items.Select(x => new
+            {
+                Action = x.RouteValues["Action"],
+                Controller = x.RouteValues["Controller"],
+                Name = x.AttributeRouteInfo?.Name,
+                Template = x.AttributeRouteInfo?.Template,
+                Contraint = x.ActionConstraints
+            }).ToList();
+            return string.Join(",", routes);
         }
     }
 
