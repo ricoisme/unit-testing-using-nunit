@@ -12,7 +12,7 @@ namespace MyAPI.Controllers
         [HttpGet]
         public string Get() => System.Runtime.InteropServices.RuntimeInformation.OSDescription;
 
-        [HttpGet("attributeName/{attributeName?}", Name = "GetCustomAttribute")]
+        [HttpGet("GetCustomAttribute/{attributeName?}", Name = "Infra_GetCustomAttribute")]
         public string[] GetCustomAttribute(string attributeName = "")
         {
             MyProperty myProperty = new MyProperty();
@@ -45,7 +45,7 @@ namespace MyAPI.Controllers
                 .ToArray();
         }
 
-        [HttpGet("headerKey/{headerKey?}", Name = "GetRequestInformation")]
+        [HttpGet("GetRequestInformation/{headerKey?}", Name = "Infra_GetRequestInformation")]
         public string[] GetRequestInformation(string headerKey = "")
         {
             var contextServerIp = this.Request.HttpContext.Connection.LocalIpAddress;
