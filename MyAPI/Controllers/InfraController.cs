@@ -12,8 +12,8 @@ namespace MyAPI.Controllers
         [HttpGet]
         public string Get() => System.Runtime.InteropServices.RuntimeInformation.OSDescription;
 
-        [HttpGet("attributeName/{attributeName}", Name = "GetCustomAttribute")]
-        public string[] GetCustomAttribute(string attributeName)
+        [HttpGet("attributeName/{attributeName?}", Name = "GetCustomAttribute")]
+        public string[] GetCustomAttribute(string attributeName = "")
         {
             MyProperty myProperty = new MyProperty();
             foreach (var itemAttribute in typeof(Startup).GetTypeInfo().Assembly.GetCustomAttributes())
