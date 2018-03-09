@@ -6,13 +6,14 @@ using System.Runtime.Versioning;
 namespace MyAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Infra")]
+    [Route("api/[controller]")]
     public class InfraController : Controller
     {
         [HttpGet]
         public string Get() => System.Runtime.InteropServices.RuntimeInformation.OSDescription;
 
-        [HttpGet("GetCustomAttribute/{attributeName?}", Name = "Infra_GetCustomAttribute")]
+        [HttpGet]
+        [Route("GetCustomAttribute")]
         public string[] GetCustomAttribute(string attributeName = "")
         {
             MyProperty myProperty = new MyProperty();
@@ -45,12 +46,13 @@ namespace MyAPI.Controllers
                 .ToArray();
         }
 
-        [HttpGet("GetRequestInformation/{headerKey}", Name = "Infra_GetRequestInformation")]
-        public string[] GetRequestInformation(int headerKey)
+        [HttpGet]
+        [Route("GetRequestInformation")]
+        public string[] GetRequestInformation(string headerKey)
         {
             var contextServerIp = this.Request.HttpContext.Connection.LocalIpAddress;
             var contextClientIp = this.Request.HttpContext.Connection.RemoteIpAddress;
-            var headerClientIp = this.Request.Headers["X-Forwarded-For"];
+            var headerClientIp = this.Request.Headers[string.IsNullOrEmpty(headerKey) ? "X-Forwarded-For" : headerKey];
             var otherHeaders = this.Request.Headers
                 .Select(kv => $"key:{kv.Key},value:{kv.Value}");
             return otherHeaders
