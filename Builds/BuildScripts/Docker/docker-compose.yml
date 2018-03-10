@@ -12,7 +12,8 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-     - ./log:/app/log 
+     - ./log:/app/log
+    restart: unless-stopped
   app2:
     container_name: 'coreapp2'
     image: 'coreapp'
@@ -24,6 +25,7 @@ services:
       dockerfile: Dockerfile
     volumes:
      - ./log:/app/log
+    restart: unless-stopped
   app3:
     container_name: 'coreapp3'
     image: 'coreapp'
@@ -35,6 +37,7 @@ services:
       dockerfile: Dockerfile
     volumes:
      - ./log:/app/log
+    restart: unless-stopped
 networks:
     mynet:
         ipam:
