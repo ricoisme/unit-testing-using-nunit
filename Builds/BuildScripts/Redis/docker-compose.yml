@@ -30,7 +30,7 @@ services:
          context: . #./sentinel/
          dockerfile: Dockerfile-sentinel
     volumes:
-     - ./redis/sentinel:/data
+     - ./redis/sentinel:/tmp
     depends_on:
       - master
     environment:
