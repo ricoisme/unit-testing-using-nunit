@@ -3,14 +3,13 @@ MAINTAINER RiCo
 RUN chown redis:redis /data
 VOLUME /data
 WORKDIR /data
-RUN mkdir -p /usr/local/etc/redis
-ADD sentinel.conf /usr/local/etc/redis/sentinel.conf
+COPY sentinel.conf /usr/local/etc/redis/sentinel.conf
 RUN chmod -R 777 /usr/local/etc/redis 
 ENV SENTINEL_QUORUM 2
 ENV SENTINEL_DOWN_AFTER 5000
 ENV SENTINEL_FAILOVER 8000
 ENV SENTINEL_PORT 26379
 EXPOSE 26379
-ADD entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod -R 777 /usr/local/bin/entrypoint.sh
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
