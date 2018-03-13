@@ -14,6 +14,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildScripts", "Builds\Buil
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildScripts.UnitTests", "Builds\BuildScripts.UnitTests\BuildScripts.UnitTests.csproj", "{CCD7B565-57C1-4CBF-9063-630E6F01236C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5E4E7B30-ED47-4392-A72A-931FDE4CC0E5}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
