@@ -11,10 +11,10 @@ namespace MyAPI.Middlewares
         private readonly RequestDelegate _next;//we have to delegate
         private ICustomersRepository _customersRepository { get; set; }//DI first
 
-        public ApiKeyValidatorsMiddleware(RequestDelegate next, ICustomersRepository _repo)
+        public ApiKeyValidatorsMiddleware(RequestDelegate next, ICustomersRepository repo)
         {
             _next = next;
-            _customersRepository = _repo;
+            _customersRepository = repo;
         }
 
         public async Task Invoke(HttpContext context)
