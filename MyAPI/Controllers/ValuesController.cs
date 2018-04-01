@@ -21,10 +21,13 @@ namespace MyAPI.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            _logger.LogInformation("calling Values controller action");
-            using (ProfilingSession.Current.Step("Handle Request - /"))
+            using (ProfilingSession.Current.Step(() => "Handle Request - /"))
             {
-                using (ProfilingSession.Current.Step(() => "write Data"))
+                using (ProfilingSession.Current.Step(() => "write Log"))
+                {
+                    _logger.LogInformation("calling Values controller action");
+                }
+                using (ProfilingSession.Current.Step(() => "write Data to SQL Server"))
                 {
                     _eventLogRepository.Insert(new EventLogModule
                     {
@@ -34,7 +37,10 @@ namespace MyAPI.Controllers
                         Message = "test by Rico"
                     });
                 }
-                return new string[] { "value1", "value2" };
+                using (ProfilingSession.Current.Step(() => "return result"))
+                {
+                    return new string[] { "value1", "value2" };
+                }
             }
         }
 
