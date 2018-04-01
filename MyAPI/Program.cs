@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 
 namespace MyAPI
 {
@@ -11,14 +13,24 @@ namespace MyAPI
         public static void Main(string[] args)
         {
             var config = new ConfigurationBuilder()
-                .AddJsonFile("hosting.json", optional: false)
+                .AddJsonFile("hosting.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("coreprofiler.json", optional: false, reloadOnChange: true)
                 .Build();
             BuildWebHost(args, config).Run();
         }
 
         public static IWebHost BuildWebHost(string[] args, IConfigurationRoot configuration) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseConfiguration(configuration)//override from hosting.json file
+                 .ConfigureLogging((hostingContext, logging) =>
+                 {
+                     //options = serviceProvider.GetRequiredService<IOptionsMonitor<AzureFileLoggerOptions>>();
+                     logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                     logging.AddConsole();
+                     logging.AddDebug();
+                 })
                 .UseStartup<Startup>()
                 .UseKestrel(options =>
                 {

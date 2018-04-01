@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using CoreProfiler.Web;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using MyAPI.Middlewares;
+using MyAPI.Extension;
+
 
 namespace MyAPI
 {
@@ -20,18 +21,17 @@ namespace MyAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.SetupCustomerRepo();
+            services.SetupDapperContext(Configuration, "LoggerDatabase");
+            services.SetupRepositories();
+
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
-            app.UseApiKeyValidation();
-
+            app.UseCoreProfiler(true);
+            //app.UseApiKeyValidation();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

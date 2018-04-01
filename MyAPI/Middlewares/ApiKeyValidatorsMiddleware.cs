@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Http;
 using MyAPI.Repositorys;
 using System.Threading.Tasks;
 
@@ -39,21 +37,5 @@ namespace MyAPI.Middlewares
         }
     }
 
-    public static class ApiKeyValidatorsExtension
-    {
-        public static IApplicationBuilder UseApiKeyValidation(this IApplicationBuilder app)
-        {
-            app.UseMiddleware<ApiKeyValidatorsMiddleware>();
-            return app;
-        }
-    }
 
-    public static class RepositoryExtension
-    {
-        public static IServiceCollection SetupCustomerRepo(this IServiceCollection services)
-        {
-            services.AddSingleton<ICustomersRepository, CustomersRepository>();
-            return services;
-        }
-    }
 }
