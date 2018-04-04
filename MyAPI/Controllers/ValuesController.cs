@@ -1,6 +1,6 @@
 ﻿using CoreProfiler;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using MyAPI.Infarstructure;
 using MyAPI.Modules;
 using MyAPI.Repositorys;
 using System.Collections.Generic;
@@ -10,9 +10,10 @@ namespace MyAPI.Controllers
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
-        private readonly ILogger<ValuesController> _logger;
+        private readonly INlogger _logger;
+        //private readonly ILogger<ValuesController> _logger;
         private readonly IEventLogRepository _eventLogRepository;
-        public ValuesController(ILogger<ValuesController> logger, IEventLogRepository eventLogRepository)
+        public ValuesController(INlogger logger, IEventLogRepository eventLogRepository)
         {
             _logger = logger;
             _eventLogRepository = eventLogRepository;
@@ -25,7 +26,8 @@ namespace MyAPI.Controllers
             {
                 using (ProfilingSession.Current.Step(() => "write Log"))
                 {
-                    _logger.LogInformation("calling Values controller action");
+                    _logger.Info("calling Values controller action");
+                    //_logger.LogInformation("calling Values controller action");
                 }
                 using (ProfilingSession.Current.Step(() => "write Data to SQL Server"))
                 {
