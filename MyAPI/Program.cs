@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using NLog.Web;
 using System;
 using System.IO;
 
@@ -12,6 +13,7 @@ namespace MyAPI
     {
         public static void Main(string[] args)
         {
+
             var config = new ConfigurationBuilder()
                 .AddJsonFile("hosting.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -24,13 +26,19 @@ namespace MyAPI
             WebHost.CreateDefaultBuilder(args)
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseConfiguration(configuration)//override from hosting.json file
-                 .ConfigureLogging((hostingContext, logging) =>
-                 {
-                     //options = serviceProvider.GetRequiredService<IOptionsMonitor<AzureFileLoggerOptions>>();
-                     logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                     logging.AddConsole();
-                     logging.AddDebug();
-                 })
+                                                //.ConfigureLogging((hostingContext, logging) =>
+                                                //{
+                                                //    //options = serviceProvider.GetRequiredService<IOptionsMonitor<AzureFileLoggerOptions>>();
+                                                //    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                                                //    logging.AddConsole();
+                                                //    logging.AddDebug();
+                                                //})
+                .ConfigureLogging(logging =>
+                    {
+                        logging.ClearProviders();
+                        logging.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+                    })
+                .UseNLog()  // NLog: setup NLog for Dependency injection
                 .UseStartup<Startup>()
                 .UseKestrel(options =>
                 {

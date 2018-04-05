@@ -22,7 +22,6 @@ namespace MyAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.SetupDapperContext(Configuration, "LoggerDatabase");
-            services.SetupNlogger(Configuration);
             services.SetupRepositories();
             services.AddMvc();
         }
