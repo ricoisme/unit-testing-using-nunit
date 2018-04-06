@@ -2,6 +2,7 @@
 using MyAPI.Infarstructure;
 using MyAPI.Modules;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
@@ -11,6 +12,9 @@ namespace MyAPI.Repositorys
     {
         void Insert(EventLogModule entity, IDbTransaction transaction = null, int? commandTimeout = null);
         Task<int> InsertAsync(EventLogModule entity, IDbTransaction transaction = null, int? commandTimeout = null);
+        long BulkInsert(IList<EventLogModule> entities, IDbTransaction transaction = null,
+            int? commandTimeout = null);
+        Task<long> BulkInsertAsync(IList<EventLogModule> entities, IDbTransaction transaction = null, int? commandTimeout = null);
     }
     public class EventLogRepository : Repository<EventLogModule>, IEventLogRepository
     {
@@ -39,16 +43,54 @@ namespace MyAPI.Repositorys
             }
         }
 
-        public Task<int> InsertAsync(EventLogModule entity, IDbTransaction transaction = null, int? commandTimeout = null)
+        public async Task<int> InsertAsync(EventLogModule entity, IDbTransaction transaction = null, int? commandTimeout = null)
         {
             try
             {
-                return base.AddAsync(entity, transaction, commandTimeout);
+                return await base.AddAsync(entity, transaction, commandTimeout);
             }
             catch (Exception ex)
             {
                 _logger.LogError($"{ex.Message}:{ex.StackTrace}");
-                return Task.FromResult(0);
+                return await Task.FromResult(0);
+            }
+            finally
+            {
+                if (_dbConnection?.State == ConnectionState.Open)
+                    _dbConnection.Close();
+            }
+        }
+
+        public long BulkInsert(IList<EventLogModule> entities, IDbTransaction transaction = null,
+            int? commandTimeout = null)
+        {
+            try
+            {
+                return base.BulkAdd(entities, transaction, commandTimeout);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{ex.Message}:{ex.StackTrace}");
+                return 0;
+            }
+            finally
+            {
+                if (_dbConnection?.State == ConnectionState.Open)
+                    _dbConnection.Close();
+            }
+        }
+
+        public async Task<long> BulkInsertAsync(IList<EventLogModule> entities, IDbTransaction transaction = null,
+            int? commandTimeout = null)
+        {
+            try
+            {
+                return await base.BulkAddAsync(entities, transaction, commandTimeout);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{ex.Message}:{ex.StackTrace}");
+                return await Task.FromResult((Int64)0);
             }
             finally
             {

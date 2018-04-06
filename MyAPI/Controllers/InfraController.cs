@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Logging;
+using MyAPI.Modules;
+using MyAPI.Repositorys;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Versioning;
+using System.Threading.Tasks;
 
 namespace MyAPI.Controllers
 {
@@ -11,14 +15,75 @@ namespace MyAPI.Controllers
     public class InfraController : Controller
     {
         private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
+        private readonly IEventLogRepository _eventLogRepository;
+        private readonly ICoreProfilerRepository _coreProfilerRepository;
+        private readonly ILogger<InfraController> _logger;
 
-        public InfraController(IActionDescriptorCollectionProvider actionDescriptorCollectionProvider)
+        public InfraController(IActionDescriptorCollectionProvider actionDescriptorCollectionProvider,
+            ILogger<InfraController> logger, IEventLogRepository eventLogRepository, ICoreProfilerRepository coreProfilerRepository)
         {
             this._actionDescriptorCollectionProvider = actionDescriptorCollectionProvider;
+            _logger = logger;
+            _eventLogRepository = eventLogRepository;
+            _coreProfilerRepository = coreProfilerRepository;
         }
 
         [HttpGet("GetOs")]
-        public string GetOs() => System.Runtime.InteropServices.RuntimeInformation.OSDescription;
+        public async Task<string> GetOs()
+        {
+            _eventLogRepository.Insert(new EventLogModule
+            {
+                EventID = 1,
+                Exception = "",
+                LogLevel = "Information",
+                Message = "test by Rico"
+            });
+
+            await _eventLogRepository.InsertAsync(new EventLogModule
+            {
+                EventID = 2,
+                Exception = "",
+                LogLevel = "Information",
+                Message = "test by Rico"
+            });
+
+            _eventLogRepository.BulkInsert(
+            new[]{
+                new EventLogModule
+                {
+                    EventID = 3,
+                    Exception = "",
+                    LogLevel = "Information",
+                    Message = "test by Rico"
+                },
+                new EventLogModule
+                {
+                    EventID = 4,
+                    Exception = "",
+                    LogLevel = "Information",
+                    Message = "test by Rico"
+                }
+            });
+
+            await _eventLogRepository.BulkInsertAsync(
+            new[]{
+                new EventLogModule
+                {
+                    EventID = 5,
+                    Exception = "",
+                    LogLevel = "Information",
+                    Message = "test by Rico"
+                },
+                new EventLogModule
+                {
+                    EventID = 6,
+                    Exception = "",
+                    LogLevel = "Information",
+                    Message = "test by Rico"
+                }
+            });
+            return System.Runtime.InteropServices.RuntimeInformation.OSDescription;
+        }
 
         [HttpGet("attributeName/{attributeName?}")]
         public string[] GetCustomAttribute(string attributeName = "")

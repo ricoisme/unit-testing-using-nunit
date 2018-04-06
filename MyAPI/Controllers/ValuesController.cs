@@ -1,8 +1,10 @@
 ﻿using CoreProfiler;
+using CoreProfiler.Timings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MyAPI.Modules;
 using MyAPI.Repositorys;
+using System;
 using System.Collections.Generic;
 
 namespace MyAPI.Controllers
@@ -12,34 +14,93 @@ namespace MyAPI.Controllers
     {
         private readonly ILogger<ValuesController> _logger;
         private readonly IEventLogRepository _eventLogRepository;
-        public ValuesController(ILogger<ValuesController> logger, IEventLogRepository eventLogRepository)
+        private readonly ICoreProfilerRepository _coreProfilerRepository;
+        public ValuesController(ILogger<ValuesController> logger, IEventLogRepository eventLogRepository, ICoreProfilerRepository coreProfilerRepository)
         {
             _logger = logger;
             _eventLogRepository = eventLogRepository;
+            _coreProfilerRepository = coreProfilerRepository;
         }
         // GET api/values
         [HttpGet]
         public IEnumerable<string> Get()
         {
+            ITimingSession timingSession = null;
             using (ProfilingSession.Current.Step(() => "Handle Request - /"))
             {
+                timingSession = ProfilingSession.Current.Profiler.GetTimingSession();
+                _coreProfilerRepository.InsertAsync(new CoreProfilerModulecs
+                {
+                    SessionId = timingSession.ParentId.HasValue ? timingSession.ParentId.Value.ToString() :
+                    Guid.NewGuid().ToString(),
+                    Machine = timingSession.MachineName,
+                    Type = timingSession.Type,
+                    Id = timingSession.Id.ToString(),
+                    Name = timingSession.Name,
+                    Start = timingSession.StartMilliseconds,
+                    Duration = timingSession.DurationMilliseconds,
+                    Sort = timingSession.Sort,
+                    Started = timingSession.Started
+                }).GetAwaiter().GetResult();
                 using (ProfilingSession.Current.Step(() => "write Log"))
                 {
                     _logger.LogInformation("calling Values controller action");
-                    _logger.LogError("calling Values controller action");
+                    //_logger.LogError("calling Values controller action");
+                    timingSession = ProfilingSession.Current.Profiler.GetTimingSession();
+                    _coreProfilerRepository.InsertAsync(new CoreProfilerModulecs
+                    {
+                        SessionId = timingSession.ParentId.HasValue ? timingSession.ParentId.Value.ToString() :
+                  Guid.NewGuid().ToString(),
+                        Machine = timingSession.MachineName,
+                        Type = timingSession.Type,
+                        Id = timingSession.Id.ToString(),
+                        Name = timingSession.Name,
+                        Start = timingSession.StartMilliseconds,
+                        Duration = timingSession.DurationMilliseconds,
+                        Sort = timingSession.Sort,
+                        Started = timingSession.Started
+                    }).GetAwaiter().GetResult();
                 }
                 using (ProfilingSession.Current.Step(() => "write Data to SQL Server"))
                 {
-                    _eventLogRepository.Insert(new EventLogModule
+                    _eventLogRepository.InsertAsync(new EventLogModule
                     {
                         EventID = 1,
                         Exception = "",
                         LogLevel = "Information",
                         Message = "test by Rico"
                     });
+                    timingSession = ProfilingSession.Current.Profiler.GetTimingSession();
+                    _coreProfilerRepository.InsertAsync(new CoreProfilerModulecs
+                    {
+                        SessionId = timingSession.ParentId.HasValue ? timingSession.ParentId.Value.ToString() :
+                   Guid.NewGuid().ToString(),
+                        Machine = timingSession.MachineName,
+                        Type = timingSession.Type,
+                        Id = timingSession.Id.ToString(),
+                        Name = timingSession.Name,
+                        Start = timingSession.StartMilliseconds,
+                        Duration = timingSession.DurationMilliseconds,
+                        Sort = timingSession.Sort,
+                        Started = timingSession.Started
+                    }).GetAwaiter().GetResult();
                 }
                 using (ProfilingSession.Current.Step(() => "return result"))
                 {
+                    timingSession = ProfilingSession.Current.Profiler.GetTimingSession();
+                    _coreProfilerRepository.InsertAsync(new CoreProfilerModulecs
+                    {
+                        SessionId = timingSession.ParentId.HasValue ? timingSession.ParentId.Value.ToString() :
+                   Guid.NewGuid().ToString(),
+                        Machine = timingSession.MachineName,
+                        Type = timingSession.Type,
+                        Id = timingSession.Id.ToString(),
+                        Name = timingSession.Name,
+                        Start = timingSession.StartMilliseconds,
+                        Duration = timingSession.DurationMilliseconds,
+                        Sort = timingSession.Sort,
+                        Started = timingSession.Started
+                    }).GetAwaiter().GetResult();
                     return new string[] { "value1", "value2" };
                 }
             }

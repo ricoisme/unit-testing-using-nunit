@@ -16,10 +16,10 @@ namespace MyAPI.Modules
         public string Type { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
-        public int Start { get; set; }
-        public int Duration { get; set; }
-        public int Sort { get; set; }
+        public Int64 Start { get; set; }
+        public Int64 Duration { get; set; }
+        public Int64 Sort { get; set; }
         public DateTime Started { get; set; }
-        public string Exception { get; set; }
+        //public string Exception { get; set; }
     }
 }

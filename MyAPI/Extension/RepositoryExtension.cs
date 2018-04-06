@@ -9,6 +9,7 @@ namespace MyAPI.Extension
         {
             services.AddSingleton<ICustomersRepository, CustomersRepository>();
             services.AddSingleton<IEventLogRepository, EventLogRepository>();
+            services.AddSingleton<ICoreProfilerRepository, CoreProfilerRepository>();
             return services;
         }
     }
