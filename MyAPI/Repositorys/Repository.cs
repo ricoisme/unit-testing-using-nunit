@@ -66,11 +66,7 @@ namespace MyAPI.Repositorys
             {
                 throw new ArgumentNullException("entity", "Add to DB null entity");
             }
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
-                Conn.Open();
-            var res = Conn.Insert(entity, transaction: transaction, commandTimeout: commandTimeout);
+            var affectedRows = Conn.Insert(entity, transaction, commandTimeout);
         }
 
         public virtual async Task<int> AddAsync(T entity, IDbTransaction transaction = null, int? commandTimeout = null)
@@ -79,10 +75,6 @@ namespace MyAPI.Repositorys
             {
                 throw new ArgumentNullException("entity", "Add to DB null entity");
             }
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
-                Conn.Open();
             return await Conn.InsertAsync(entity, transaction, commandTimeout);
         }
 
@@ -93,11 +85,17 @@ namespace MyAPI.Repositorys
             {
                 throw new ArgumentNullException("entities", "Add to DB null entities");
             }
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
+            if (transaction == null)
+            {
                 Conn.Open();
-            return Conn.Insert(entities, transaction, commandTimeout);
+                using (transaction = Conn.BeginTransaction())
+                {
+                    var affectedRows = Conn.Insert(entities, transaction, commandTimeout);
+                    transaction.Commit();
+                    return affectedRows;
+                }
+            }
+            return 0;
         }
         public virtual async Task<long> BulkAddAsync(IList<T> entities, IDbTransaction transaction = null, int? commandTimeout = null)
         {
@@ -105,11 +103,17 @@ namespace MyAPI.Repositorys
             {
                 throw new ArgumentNullException("entities", "Add to DB null entities");
             }
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
+            if (transaction == null)
+            {
                 Conn.Open();
-            return await Conn.InsertAsync(entities, transaction, commandTimeout);
+                using (transaction = Conn.BeginTransaction())
+                {
+                    var affectedRows = await Conn.InsertAsync(entities, transaction, commandTimeout);
+                    transaction.Commit();
+                    return affectedRows;
+                }
+            }
+            return 0;
         }
 
         #endregion
@@ -122,11 +126,7 @@ namespace MyAPI.Repositorys
             {
                 throw new ArgumentNullException("entity", "Update in DB null entity");
             }
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
-                Conn.Open();
-            Conn.Update(entity, transaction: transaction, commandTimeout: commandTimeout);
+            Conn.Update(entity, transaction, commandTimeout);
         }
 
         public virtual async Task<bool> UpdateAsync(T entity, IDbTransaction transaction = null, int? commandTimeout = null)
@@ -135,11 +135,7 @@ namespace MyAPI.Repositorys
             {
                 throw new ArgumentNullException("entity", "Update in DB null entity");
             }
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
-                Conn.Open();
-            return await Conn.UpdateAsync(entity, transaction: transaction, commandTimeout: commandTimeout);
+            return await Conn.UpdateAsync(entity, transaction, commandTimeout);
         }
 
         public virtual bool BulkUpdate(IList<T> entities, IDbTransaction transaction = null,
@@ -149,11 +145,17 @@ namespace MyAPI.Repositorys
             {
                 throw new ArgumentNullException("entities", "Add to DB null entities");
             }
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
+            if (transaction == null)
+            {
                 Conn.Open();
-            return Conn.Update(entities, transaction, commandTimeout);
+                using (transaction = Conn.BeginTransaction())
+                {
+                    var result = Conn.Update(entities, transaction, commandTimeout);
+                    transaction.Commit();
+                    return result;
+                }
+            }
+            return false;
         }
         public virtual async Task<bool> BulkUpdateAsync(IList<T> entities, IDbTransaction transaction = null, int? commandTimeout = null)
         {
@@ -161,11 +163,17 @@ namespace MyAPI.Repositorys
             {
                 throw new ArgumentNullException("entities", "Add to DB null entities");
             }
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
+            if (transaction == null)
+            {
                 Conn.Open();
-            return await Conn.UpdateAsync(entities, transaction, commandTimeout);
+                using (transaction = Conn.BeginTransaction())
+                {
+                    var result = await Conn.UpdateAsync(entities, transaction, commandTimeout);
+                    transaction.Commit();
+                    return result;
+                }
+            }
+            return await Task.FromResult(false);
         }
 
         #endregion
@@ -179,24 +187,16 @@ namespace MyAPI.Repositorys
             {
                 throw new ArgumentNullException("entity", "Remove in DB null entity");
             }
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
-                Conn.Open();
             Conn.Delete(entity, transaction: transaction, commandTimeout: commandTimeout);
         }
 
-        public virtual Task<bool> RemoveAsync(T entity, IDbTransaction transaction = null, int? commandTimeout = null)
+        public virtual async Task<bool> RemoveAsync(T entity, IDbTransaction transaction = null, int? commandTimeout = null)
         {
             if (entity == null)
             {
                 throw new ArgumentNullException("entity", "Remove in DB null entity");
             }
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
-                Conn.Open();
-            return Conn.DeleteAsync(entity, transaction: transaction, commandTimeout: commandTimeout);
+            return await Conn.DeleteAsync(entity, transaction, commandTimeout);
         }
 
         public virtual bool BulkRemove(IList<T> entities, IDbTransaction transaction = null,
@@ -206,11 +206,17 @@ namespace MyAPI.Repositorys
             {
                 throw new ArgumentNullException("entities", "Add to DB null entities");
             }
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
+            if (transaction == null)
+            {
                 Conn.Open();
-            return Conn.Delete(entities, transaction, commandTimeout);
+                using (transaction = Conn.BeginTransaction())
+                {
+                    var result = Conn.Delete(entities, transaction, commandTimeout);
+                    transaction.Commit();
+                    return result;
+                }
+            }
+            return false;
         }
         public virtual async Task<bool> BulkRemoveAsync(IList<T> entities, IDbTransaction transaction = null, int? commandTimeout = null)
         {
@@ -218,11 +224,17 @@ namespace MyAPI.Repositorys
             {
                 throw new ArgumentNullException("entities", "Add to DB null entities");
             }
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
+            if (transaction == null)
+            {
                 Conn.Open();
-            return await Conn.DeleteAsync(entities, transaction, commandTimeout);
+                using (transaction = Conn.BeginTransaction())
+                {
+                    var result = await Conn.DeleteAsync(entities, transaction, commandTimeout);
+                    transaction.Commit();
+                    return result;
+                }
+            }
+            return await Task.FromResult(false);
         }
 
         #endregion
@@ -236,7 +248,7 @@ namespace MyAPI.Repositorys
             {
                 throw new ArgumentNullException("id");
             }
-            return Conn.Get<T>(id, transaction: transaction, commandTimeout: commandTimeout);
+            return Conn.Get<T>(id, transaction, commandTimeout);
         }
 
         public virtual Task<T> GetByKeyAsync(object id, IDbTransaction transaction = null, int? commandTimeout = null)
@@ -245,25 +257,17 @@ namespace MyAPI.Repositorys
             {
                 throw new ArgumentNullException("id");
             }
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
-                Conn.Open();
-            return Conn.GetAsync<T>(id, transaction: transaction, commandTimeout: commandTimeout);
+            return Conn.GetAsync<T>(id, transaction, commandTimeout);
         }
 
         public virtual IEnumerable<T> GetAll(IDbTransaction transaction = null, int? commandTimeout = null)
         {
-            return Conn.GetAll<T>(transaction: transaction, commandTimeout: commandTimeout);
+            return Conn.GetAll<T>(transaction, commandTimeout);
         }
 
         public virtual Task<IEnumerable<T>> GetAllAsync(IDbTransaction transaction = null, int? commandTimeout = null)
         {
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
-                Conn.Open();
-            return Conn.GetAllAsync<T>(transaction: transaction, commandTimeout: commandTimeout);
+            return Conn.GetAllAsync<T>(transaction, commandTimeout);
         }
 
         //public virtual IEnumerable<T> GetBy(object where = null, object order = null, IDbTransaction transaction = null, int? commandTimeout = null)
@@ -278,37 +282,25 @@ namespace MyAPI.Repositorys
 
         public virtual IEnumerable<T> Exec<Tsp>(string sql, CommandType commandType, DynamicParameters param = null, IDbTransaction transaction = null, int? commandTimeout = null)
         {
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
-                Conn.Open();
+            sql = $"SET XACT_ABORT ON; {sql}";
             return Conn.Query<T>(sql, param, commandType: commandType, transaction: transaction, commandTimeout: commandTimeout);
         }
 
         public virtual Task<IEnumerable<T>> ExecAsync<Tsp>(string sql, CommandType commandType, DynamicParameters param = null, IDbTransaction transaction = null, int? commandTimeout = null)
         {
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
-                Conn.Open();
+            sql = $"SET XACT_ABORT ON; {sql}";
             return Conn.QueryAsync<T>(sql, param, commandType: commandType, transaction: transaction, commandTimeout: commandTimeout);
         }
 
         public virtual void Exec(string sql, CommandType commandType, DynamicParameters param = null, IDbTransaction transaction = null, int? commandTimeout = null)
         {
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
-                Conn.Open();
+            sql = $"SET XACT_ABORT ON; {sql}";
             Conn.Execute(sql, param, commandType: commandType, transaction: transaction, commandTimeout: commandTimeout);
         }
 
         public virtual Task<int> ExecAsync(string sql, CommandType commandType, DynamicParameters param = null, IDbTransaction transaction = null, int? commandTimeout = null)
         {
-            if (Conn == null)
-                Conn = Context.Connection;
-            if (Conn.State == ConnectionState.Closed)
-                Conn.Open();
+            sql = $"SET XACT_ABORT ON; {sql}";
             return Conn.ExecuteAsync(sql, param, commandType: commandType, transaction: transaction, commandTimeout: commandTimeout);
         }
 
