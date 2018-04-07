@@ -87,13 +87,16 @@ namespace MyAPI.Repositorys
             }
             if (transaction == null)
             {
+
                 Conn.Open();
                 using (transaction = Conn.BeginTransaction())
                 {
                     var affectedRows = Conn.Insert(entities, transaction, commandTimeout);
                     transaction.Commit();
+                    Conn.Close();
                     return affectedRows;
                 }
+
             }
             return 0;
         }
@@ -105,13 +108,16 @@ namespace MyAPI.Repositorys
             }
             if (transaction == null)
             {
+
                 Conn.Open();
                 using (transaction = Conn.BeginTransaction())
                 {
                     var affectedRows = await Conn.InsertAsync(entities, transaction, commandTimeout);
                     transaction.Commit();
+                    Conn.Close();
                     return affectedRows;
                 }
+
             }
             return 0;
         }
@@ -147,13 +153,16 @@ namespace MyAPI.Repositorys
             }
             if (transaction == null)
             {
+
                 Conn.Open();
                 using (transaction = Conn.BeginTransaction())
                 {
                     var result = Conn.Update(entities, transaction, commandTimeout);
                     transaction.Commit();
+                    Conn.Close();
                     return result;
                 }
+
             }
             return false;
         }
@@ -165,13 +174,16 @@ namespace MyAPI.Repositorys
             }
             if (transaction == null)
             {
+
                 Conn.Open();
                 using (transaction = Conn.BeginTransaction())
                 {
                     var result = await Conn.UpdateAsync(entities, transaction, commandTimeout);
                     transaction.Commit();
+                    Conn.Close();
                     return result;
                 }
+
             }
             return await Task.FromResult(false);
         }
@@ -208,13 +220,16 @@ namespace MyAPI.Repositorys
             }
             if (transaction == null)
             {
+
                 Conn.Open();
                 using (transaction = Conn.BeginTransaction())
                 {
                     var result = Conn.Delete(entities, transaction, commandTimeout);
                     transaction.Commit();
+                    Conn.Close();
                     return result;
                 }
+
             }
             return false;
         }
@@ -226,13 +241,16 @@ namespace MyAPI.Repositorys
             }
             if (transaction == null)
             {
+
                 Conn.Open();
                 using (transaction = Conn.BeginTransaction())
                 {
                     var result = await Conn.DeleteAsync(entities, transaction, commandTimeout);
                     transaction.Commit();
+                    Conn.Close();
                     return result;
                 }
+
             }
             return await Task.FromResult(false);
         }

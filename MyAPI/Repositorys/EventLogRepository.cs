@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Dapper;
+using Microsoft.Extensions.Logging;
 using MyAPI.Infarstructure;
 using MyAPI.Modules;
 using System;
@@ -15,6 +16,7 @@ namespace MyAPI.Repositorys
         long BulkInsert(IList<EventLogModule> entities, IDbTransaction transaction = null,
             int? commandTimeout = null);
         Task<long> BulkInsertAsync(IList<EventLogModule> entities, IDbTransaction transaction = null, int? commandTimeout = null);
+        IEnumerable<EventLogModule> ExecSql<Tsp>(string sql, CommandType commandType, DynamicParameters param = null, IDbTransaction transaction = null, int? commandTimeout = null);
     }
     public class EventLogRepository : Repository<EventLogModule>, IEventLogRepository
     {
@@ -91,6 +93,24 @@ namespace MyAPI.Repositorys
             {
                 _logger.LogError($"{ex.Message}:{ex.StackTrace}");
                 return await Task.FromResult((Int64)0);
+            }
+            finally
+            {
+                if (_dbConnection?.State == ConnectionState.Open)
+                    _dbConnection.Close();
+            }
+        }
+
+        public IEnumerable<EventLogModule> ExecSql<Tsp>(string sql, CommandType commandType, DynamicParameters param = null, IDbTransaction transaction = null, int? commandTimeout = null)
+        {
+            try
+            {
+                return base.Exec<EventLogModule>(sql, commandType, param, transaction, commandTimeout);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{ex.Message}:{ex.StackTrace}");
+                return null;
             }
             finally
             {
