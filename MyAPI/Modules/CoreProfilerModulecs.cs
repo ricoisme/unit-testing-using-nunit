@@ -12,9 +12,10 @@ namespace MyAPI.Modules
         [Write(false)]
         public long Serial { get; set; }
         public string SessionId { get; set; }
+        public string ParentId { get; set; }
         public string Machine { get; set; }
         public string Type { get; set; }
-        public string Id { get; set; }
+        public string CurrentId { get; set; }
         public string Name { get; set; }
         public Int64 Start { get; set; }
         public Int64 Duration { get; set; }
