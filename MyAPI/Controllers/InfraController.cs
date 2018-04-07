@@ -82,8 +82,6 @@ namespace MyAPI.Controllers
                     Message = "test by Rico"
                 }
             });
-
-            _eventLogRepository.ExecSql<EventLogModule>("select * from dbo.EventLog", System.Data.CommandType.Text);
             return System.Runtime.InteropServices.RuntimeInformation.OSDescription;
         }
 
