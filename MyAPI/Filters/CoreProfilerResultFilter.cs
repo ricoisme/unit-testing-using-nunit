@@ -20,6 +20,7 @@ namespace MyAPI.Filters
         }
         public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
+            await next();//after the action executes
             var timingSession = ProfilingSession.Current.Profiler.GetTimingSession();
             if (timingSession != null)
             {
@@ -46,8 +47,6 @@ namespace MyAPI.Filters
                 }
                 await _coreProfilerRepository.BulkInsertAsync(coreProfilerModulecs);
             }
-
-            await next();
         }
     }
 }
