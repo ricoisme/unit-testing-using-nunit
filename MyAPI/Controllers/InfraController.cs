@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Logging;
+using MyAPI.Filters;
 using MyAPI.Modules;
 using MyAPI.Repositorys;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace MyAPI.Controllers
 {
+    [AddHeaderResultFilter("Author", "ricoisme")]
     [Produces("application/json")]
     [Route("api/[controller]")]
     public class InfraController : Controller

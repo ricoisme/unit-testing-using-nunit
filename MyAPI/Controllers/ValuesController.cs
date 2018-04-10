@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace MyAPI.Controllers
 {
+    //[CoreProfilerResultFilterAttribute]
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {

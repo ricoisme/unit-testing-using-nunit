@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using MyAPI.Extension;
 using MyAPI.Filters;
-using MyAPI.Repositorys;
 
 namespace MyAPI
 {
@@ -25,12 +23,14 @@ namespace MyAPI
         {
             services.SetupDapperContext(Configuration, "LoggerDatabase");
             services.SetupRepositories();
-            var serviceProvider = services.BuildServiceProvider();
-            var coreprofilerRep = serviceProvider.GetService<ICoreProfilerRepository>();
-            var logger = serviceProvider.GetService<ILogger<CoreProfilerResultFilter>>();
+            //var serviceProvider = services.BuildServiceProvider();
+            //var coreprofilerRep = serviceProvider.GetService<ICoreProfilerRepository>();
+            //var logger = serviceProvider.GetService<ILogger<CoreProfilerResultFilter>>();
             services.AddMvc(config =>
             {
-                config.Filters.Add(new CoreProfilerResultFilter(logger, coreprofilerRep));
+                config.Filters.Add(new CoreProfilerResultFilterAttribute());// an instance
+                //config.Filters.Add(typeof(CoreProfilerResultFilterAttribute)); // by type
+                //config.Filters.Add(new CoreProfilerResultFilter(logger, coreprofilerRep));// an instance
             });
         }
 
