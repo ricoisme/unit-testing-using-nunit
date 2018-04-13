@@ -17,9 +17,9 @@ namespace MyAPI.Filters
 
         private class CoreProfilerResultFilterImpl : IAsyncResultFilter
         {
-            private readonly ILogger<CoreProfilerResultFilter> _logger;
+            private readonly ILogger<CoreProfilerResultFilterImpl> _logger;
             private readonly ICoreProfilerRepository _coreProfilerRepository;
-            public CoreProfilerResultFilterImpl(ILogger<CoreProfilerResultFilter> logger, ICoreProfilerRepository coreProfilerRepository)
+            public CoreProfilerResultFilterImpl(ILogger<CoreProfilerResultFilterImpl> logger, ICoreProfilerRepository coreProfilerRepository)
             {
                 _logger = logger;
                 _coreProfilerRepository = coreProfilerRepository;
