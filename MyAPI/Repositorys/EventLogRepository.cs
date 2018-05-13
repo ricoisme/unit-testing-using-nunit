@@ -16,7 +16,10 @@ namespace MyAPI.Repositorys
         long BulkInsert(IList<EventLogModule> entities, IDbTransaction transaction = null,
             int? commandTimeout = null);
         Task<long> BulkInsertAsync(IList<EventLogModule> entities, IDbTransaction transaction = null, int? commandTimeout = null);
+        IEnumerable<dynamic> QueryWithSP(string storedProcedure, DynamicParameters param = null, DynamicParameters outParam = null, IDbTransaction transaction = null, bool buffered = true, int? commandTimeout = null);
+
         IEnumerable<EventLogModule> ExecSql<Tsp>(string sql, CommandType commandType, DynamicParameters param = null, IDbTransaction transaction = null, int? commandTimeout = null);
+        Task<int> ExecuteSPAsync(string sql, DynamicParameters param = null, DynamicParameters outParam = null, IDbTransaction transaction = null, int? commandTimeout = null);
     }
     public class EventLogRepository : Repository<EventLogModule>, IEventLogRepository
     {
@@ -101,6 +104,24 @@ namespace MyAPI.Repositorys
             }
         }
 
+        public IEnumerable<dynamic> QueryWithSP(string storedProcedure, DynamicParameters param = null, DynamicParameters outParam = null, IDbTransaction transaction = null, bool buffered = true, int? commandTimeout = null)
+        {
+            try
+            {
+                return base.QuerySP(storedProcedure, param, outParam, transaction, buffered, commandTimeout);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{ex.Message}:{ex.StackTrace}");
+                return null;
+            }
+            finally
+            {
+                if (_dbConnection?.State == ConnectionState.Open)
+                    _dbConnection.Close();
+            }
+        }
+
         public IEnumerable<EventLogModule> ExecSql<Tsp>(string sql, CommandType commandType, DynamicParameters param = null, IDbTransaction transaction = null, int? commandTimeout = null)
         {
             try
@@ -111,6 +132,24 @@ namespace MyAPI.Repositorys
             {
                 _logger.LogError($"{ex.Message}:{ex.StackTrace}");
                 return null;
+            }
+            finally
+            {
+                if (_dbConnection?.State == ConnectionState.Open)
+                    _dbConnection.Close();
+            }
+        }
+
+        public async Task<int> ExecuteSPAsync(string sql, DynamicParameters param = null, DynamicParameters outParam = null, IDbTransaction transaction = null, int? commandTimeout = null)
+        {
+            try
+            {
+                return await base.ExecSPAsync(sql, param, outParam, transaction, commandTimeout);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"{ex.Message}:{ex.StackTrace}");
+                return await Task.FromResult(0);
             }
             finally
             {

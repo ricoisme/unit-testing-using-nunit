@@ -38,6 +38,8 @@ namespace MyAPI.Repositorys
         Task<IEnumerable<T>> GetAllAsync(IDbTransaction transaction = null, int? commandTimeout = null);
         //IEnumerable<T> GetBy(object where = null, object order = null, IDbTransaction transaction = null, int? commandTimeout = null);
 
+        IEnumerable<dynamic> QuerySP(string storedProcedure, dynamic param = null, dynamic outParam = null, IDbTransaction transaction = null, bool buffered = true, int? commandTimeout = null);
+
         IEnumerable<T> Exec<Tsp>(string sql, CommandType commandType, DynamicParameters param = null, IDbTransaction transaction = null, int? commandTimeout = null);
 
         Task<IEnumerable<T>> ExecAsync<Tsp>(string sql, CommandType commandType, DynamicParameters param = null, IDbTransaction transaction = null, int? commandTimeout = null);
@@ -45,6 +47,7 @@ namespace MyAPI.Repositorys
         void Exec(string sql, CommandType commandType, DynamicParameters param = null, IDbTransaction transaction = null, int? commandTimeout = null);
 
         Task<int> ExecAsync(string sql, CommandType commandType, DynamicParameters param = null, IDbTransaction transaction = null, int? commandTimeout = null);
+        Task<int> ExecSPAsync(string sql, dynamic param = null, dynamic outParam = null, IDbTransaction transaction = null, int? commandTimeout = null);
     }
 
     public partial class Repository<T> : IRepository<T>
@@ -117,7 +120,9 @@ namespace MyAPI.Repositorys
                     Conn.Close();
                     return affectedRows;
                 }
-
+                //var affectedRows = await Conn.InsertAsync(entities, transaction, commandTimeout);
+                //Conn.Close();
+                //return affectedRows;
             }
             return 0;
         }
@@ -260,6 +265,22 @@ namespace MyAPI.Repositorys
 
         #region select
 
+        private static void CombineParameters(ref dynamic param, dynamic outParam = null)
+        {
+            if (outParam != null)
+            {
+                if (param != null)
+                {
+                    param = new DynamicParameters(param);
+                    ((DynamicParameters)param).AddDynamicParams(outParam);
+                }
+                else
+                {
+                    param = outParam;
+                }
+            }
+        }
+
         public virtual T GetByKey(object id, IDbTransaction transaction = null, int? commandTimeout = null)
         {
             if (id == null)
@@ -286,6 +307,12 @@ namespace MyAPI.Repositorys
         public virtual Task<IEnumerable<T>> GetAllAsync(IDbTransaction transaction = null, int? commandTimeout = null)
         {
             return Conn.GetAllAsync<T>(transaction, commandTimeout);
+        }
+
+        public virtual IEnumerable<dynamic> QuerySP(string storedProcedure, dynamic param = null, dynamic outParam = null, IDbTransaction transaction = null, bool buffered = true, int? commandTimeout = null)
+        {
+            CombineParameters(ref param, outParam);
+            return Conn.Query(storedProcedure, param: (object)param, transaction: transaction, buffered: buffered, commandTimeout: commandTimeout, commandType: CommandType.StoredProcedure);
         }
 
         //public virtual IEnumerable<T> GetBy(object where = null, object order = null, IDbTransaction transaction = null, int? commandTimeout = null)
@@ -321,6 +348,14 @@ namespace MyAPI.Repositorys
             sql = $"SET XACT_ABORT ON; {sql}";
             return Conn.ExecuteAsync(sql, param, commandType: commandType, transaction: transaction, commandTimeout: commandTimeout);
         }
+
+        public virtual Task<int> ExecSPAsync(string sql, dynamic param = null, dynamic outParam = null, IDbTransaction transaction = null, int? commandTimeout = null)
+        {
+            CombineParameters(ref param, outParam);
+
+            return Conn.ExecuteAsync(sql, param: (object)param, transaction: transaction, commandTimeout: commandTimeout, commandType: CommandType.StoredProcedure);
+        }
+
 
         #endregion
     }
