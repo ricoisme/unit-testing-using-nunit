@@ -55,6 +55,21 @@ namespace MyAPI.Controllers
             }
         }
 
+        [HttpGet("ReadName/{serial}")]
+        public async Task<string> ReadName(int serial)
+        {
+            var inputpara = new DynamicParameters();
+            inputpara.Add("c1", serial, DbType.Int16, ParameterDirection.Input, null);
+
+            var outputpara = new DynamicParameters();
+            outputpara.Add("c2", "", DbType.String, ParameterDirection.Output, 10);
+
+            await _eventLogRepository.ExecuteSPAsync("usp_test", inputpara, outputpara);
+            string result = outputpara.Get<string>("c2");
+
+            return string.IsNullOrEmpty(result) ? "no content" : result;
+        }
+
         [HttpGet("BulkTest/{max}")]
         public async Task<string> BulkTest(int max)
         {
@@ -73,10 +88,10 @@ namespace MyAPI.Controllers
                 }
                 using (ProfilingSession.Current.Step(() => "bulk insert to sql server"))
                 {
-                    await _eventLogRepository.BulkInsertAsync(datas);
-                    //var mytvp = new DynamicParameters();
-                    //mytvp.AddDynamicParams(new { DataList = dt.AsTableValuedParameter("UT_EventLog") });
-                    //await _eventLogRepository.ExecuteSPAsync("dbo.usp_InsertEventLogWithTvp", mytvp);
+                    //await _eventLogRepository.BulkInsertAsync(datas);
+                    var mytvp = new DynamicParameters();
+                    mytvp.AddDynamicParams(new { DataList = dt.AsTableValuedParameter("UT_EventLog") });
+                    await _eventLogRepository.ExecuteSPAsync("dbo.usp_InsertEventLogWithTvp", mytvp);
                 }
                 return await Task.FromResult($"number of record:{datas.Count}");
             }
