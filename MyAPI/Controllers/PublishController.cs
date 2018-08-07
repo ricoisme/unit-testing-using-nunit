@@ -31,16 +31,36 @@ namespace MyAPI.Controllers
                     _publisher.Publish("rico.services.customer.check",
                         new CustomersModule { ID = "1", Name = "ricoisme", Email = "rico@aa.com", MobilePhone = "123456789" }, sqlTransaction);
 
-                    sqlTransaction.Commit();
+                    //sqlTransaction.Commit();
+                    sqlTransaction.Rollback();
                 }
             }
             return Ok();
         }
 
-        [CapSubscribe("rico.services.customer.check")]
-        public Task<string> CheckReceivedMessage(CustomersModule customer)
+        private static void FailedMessagesProcess()
         {
-            return Task.FromResult(string.Join(",", customer));
+            //if (returnFailedMessage == null)
+            //    return;
+            //try
+            //{
+            //    var warningMessage = $"Message string is too long. Topic:{returnFailedMessage.Topic}, Timestamp:{returnFailedMessage.Timestamp}, Length:{returnFailedMessage.Length}, Limit:{returnFailedMessage.Limit}, Published:{returnFailedMessage.Published}";
+            //    Console.WriteLine(warningMessage);
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine(($"Error occurred when LargeMessagesProcess executed:{e.Message}"));
+            //}
+        }
+
+        [CapSubscribe("rico.services.customer.check")]
+        public Task CheckReceivedMessage(CustomersModule customer)
+        {
+            //return Task.FromException(new NullReferenceException());
+            var tcs = new TaskCompletionSource<int>();
+            tcs.TrySetCanceled();
+            return tcs.Task;
+            //return Task.FromResult(string.Join(",", customer));
         }
     }
 }

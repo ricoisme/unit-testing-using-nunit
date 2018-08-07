@@ -38,6 +38,9 @@ namespace MyAPI
 
                 // If you are using Kafka, you need to add the configuration：
                 x.UseKafka("127.0.0.1:9092");
+                x.FailedRetryCount = 2;
+                x.FailedRetryInterval = 5;
+
 
                 // Register Dashboard
                 x.UseDashboard();
