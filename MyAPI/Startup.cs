@@ -23,6 +23,36 @@ namespace MyAPI
         {
             services.SetupDapperContext(Configuration, "LoggerDatabase");
             services.SetupRepositories();
+            services.AddSingleton(Configuration);
+            services.AddCap(x =>
+            {
+                // If you are using EF, you need to add the following configuration：
+                // Notice: You don't need to config x.UseSqlServer(""") again! CAP can autodiscovery.
+
+                // If you are using ado.net,you need to add the configuration：
+                x.UseSqlServer(config =>
+                {
+                    config.ConnectionString =
+                    Configuration.GetConnectionString("LoggerDatabase");
+                });
+
+                // If you are using Kafka, you need to add the configuration：
+                x.UseKafka("127.0.0.1:9092");
+
+                // Register Dashboard
+                x.UseDashboard();
+
+                // Register to Consul
+                x.UseDiscovery(d =>
+                {
+                    d.DiscoveryServerHostName = "localhost";
+                    d.DiscoveryServerPort = 8500;
+                    d.CurrentNodeHostName = "localhost";
+                    d.CurrentNodePort = 5200;
+                    d.NodeId = 1;
+                    d.NodeName = "CAP No.1 Node";
+                });
+            });
             //var serviceProvider = services.BuildServiceProvider();
             //var coreprofilerRep = serviceProvider.GetService<ICoreProfilerRepository>();
             //var logger = serviceProvider.GetService<ILogger<CoreProfilerResultFilter>>();
@@ -48,7 +78,8 @@ namespace MyAPI
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             })
             .UseStaticFiles()
-            .UseMvc();
+            .UseMvc()
+            .UseCap();
             //.UseMvc(routes =>
             //{
             //    routes.MapRoute("api", "api/{controller=Infra}/{action=GetOs}/{id?}");

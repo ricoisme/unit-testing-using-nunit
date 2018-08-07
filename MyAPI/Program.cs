@@ -17,7 +17,7 @@ namespace MyAPI
             var config = new ConfigurationBuilder()
                 .AddJsonFile("hosting.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile("coreprofiler.json", optional: false, reloadOnChange: true)
+                //.AddJsonFile("coreprofiler.json", optional: false, reloadOnChange: true)
                 .Build();
             BuildWebHost(args, config).Run();
         }

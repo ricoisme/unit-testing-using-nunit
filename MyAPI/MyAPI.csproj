@@ -21,11 +21,14 @@
   <ItemGroup>
     <PackageReference Include="coreprofiler" Version="1.1.2" />
     <PackageReference Include="CoreProfiler.Web" Version="1.1.2" />
-    <PackageReference Include="Dapper" Version="1.50.4" />
+    <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="Dapper.Contrib" Version="1.50.4" />
     <PackageReference Include="Dapper.SqlBuilder" Version="1.50.4" />
+    <PackageReference Include="DotNetCore.CAP" Version="2.2.5" />
+    <PackageReference Include="DotNetCore.CAP.Kafka" Version="2.2.5" />
+    <PackageReference Include="DotNetCore.CAP.SqlServer" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" />
     <PackageReference Include="NLog" Version="4.5.1" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.5.1" />
