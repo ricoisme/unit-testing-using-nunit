@@ -9,6 +9,7 @@ obj/
 .vs
 .vscode
 todo.txt
+readme.txt
 .cache
 src/Confluent.Kafka/runtimes
 Properties
