@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace MyAPI.Controllers
 {
-    //[CoreProfilerResultFilterAttribute]
+    //[CoreProfilerResultFilterAttribute]  
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
@@ -27,6 +27,7 @@ namespace MyAPI.Controllers
 
         }
         // GET api/values
+
         [HttpGet]
         public async Task<IEnumerable<string>> Get()
         {

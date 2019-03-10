@@ -28,8 +28,10 @@
     <PackageReference Include="DotNetCore.CAP.Kafka" Version="2.2.5" />
     <PackageReference Include="DotNetCore.CAP.SqlServer" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.5" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="NLog" Version="4.5.1" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.5.1" />
     <PackageReference Include="System.Linq" Version="4.3.0" />
